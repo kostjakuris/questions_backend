@@ -1,6 +1,7 @@
 import { IsArray, IsIn, IsNotEmpty, IsNumber, IsString } from 'class-validator';
 import { Options } from '../../../entities/options.entity';
 import { AnswerVariants, QuestionKind } from '../../../entities/question.entity';
+import { Answer } from '../../../entities/answer.entity';
 
 export class CreateQuestionDto {
   @IsString({message: 'Question text must be a string'})
@@ -47,12 +48,18 @@ export class EditQuestionDto {
   @IsArray({message: 'Question options must be an array'})
   readonly questionOptions: Options[];
   
-  @IsString({message: 'Answer text must be a string'})
-  readonly answer: string;
+  @IsArray({message: 'Answer must be an array'})
+  readonly answers: Answer[];
 }
 
 export class GetQuestionInfoDto {
   @IsString({message: 'Question id must be a string'})
   @IsNotEmpty({message: 'Question id is required'})
   readonly id: string;
+}
+
+export class DeleteQuestionDto {
+  @IsNumber({}, {message: 'Question id must be a number'})
+  @IsNotEmpty({message: 'Question id is required'})
+  readonly id: number;
 }

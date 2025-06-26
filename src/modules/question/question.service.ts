@@ -3,6 +3,7 @@ import { AnswerVariants, Question, QuestionKind } from '../../entities/question.
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Options } from '../../entities/options.entity';
+import { Answer } from '../../entities/answer.entity';
 
 @Injectable()
 export class QuestionService {
@@ -15,7 +16,12 @@ export class QuestionService {
     const questions = await this.questionRepository.find();
     if (questions) {
       return questions.map((question: Question) => {
-        return {id: question.id, text: question.questionText, variant: question.kind};
+        return {
+          id: question.id,
+          text: question.questionText,
+          variant: question.kind,
+          answerVariant: question.answerVariant
+        };
       });
     }
     return [];
@@ -30,20 +36,21 @@ export class QuestionService {
   }
   
   async createQuestion(text: string, kind: QuestionKind, variant: AnswerVariants, options: Options[]) {
-    // console.log(options);
     if (options.length > 0) {
       return await this.questionRepository.save(
         {questionText: text, kind, answerVariant: variant, options});
     }
     return await this.questionRepository.save(
-      {questionText: text, kind, answerVariant: variant, options: []});
+      {questionText: text, kind, answerVariant: variant});
   }
   
   async editQuestion(id: number, text: string, kind: QuestionKind, variant: AnswerVariants, options: Options[],
-    answer: string) {
-    return await this.questionRepository.update({id},
-      {questionText: text, kind, answerVariant: variant, options, answer}
-    );
+    answers: Answer[]) {
+    const question = await this.questionRepository.findOne({where: {id}});
+    if (question) {
+      Object.assign(question, {questionText: text, kind, answerVariant: variant, options, answers});
+      await this.questionRepository.save(question);
+    }
     
   }
   
