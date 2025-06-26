@@ -1,8 +1,7 @@
 import { Body, Controller, Delete, Get, Patch, Post, Query, UsePipes } from '@nestjs/common';
-// import { CreateTodoDto, DeleteTodoDto, EditTodoDto } from './dto/question.dto';
 import { QuestionService } from './question.service';
 import { ValidationPipe } from '../../pipes/validation.pipe';
-import { CreateQuestionDto, EditQuestionDto, GetQuestionInfoDto } from './dto/question.dto';
+import { CreateQuestionDto, DeleteQuestionDto, EditQuestionDto, GetQuestionInfoDto } from './dto/question.dto';
 
 @Controller('question')
 export class QuestionController {
@@ -31,13 +30,13 @@ export class QuestionController {
   @UsePipes(ValidationPipe)
   editQuestion(@Body() editQuestionDto: EditQuestionDto) {
     return this.questionService.editQuestion(editQuestionDto.id, editQuestionDto.text, editQuestionDto.questionKind,
-      editQuestionDto.answerVariant, editQuestionDto.questionOptions, editQuestionDto.answer
+      editQuestionDto.answerVariant, editQuestionDto.questionOptions, editQuestionDto.answers
     );
   }
   
   @Delete('/delete')
   @UsePipes(ValidationPipe)
-  deleteQuestion(@Body() id: number) {
-    return this.questionService.deleteQuestion(id);
+  deleteQuestion(@Body() deleteQuestionDto: DeleteQuestionDto) {
+    return this.questionService.deleteQuestion(deleteQuestionDto.id);
   }
 }

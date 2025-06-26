@@ -3,13 +3,13 @@ import { Question } from './question.entity';
 
 
 @Entity()
-export class Options {
+export class Answer {
   @PrimaryGeneratedColumn()
   id: number;
   
   @Column()
-  description: string;
+  text: string;
   
-  @ManyToOne(() => Question, question => question.options, {onDelete: 'CASCADE'})
+  @ManyToOne(() => Question, question => question.answers, {onDelete: 'CASCADE'})
   question: Question;
 }
