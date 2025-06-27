@@ -8,7 +8,8 @@ import { Answer } from '../../entities/answer.entity';
 @Injectable()
 export class QuestionService {
   constructor(@InjectRepository(Question) private questionRepository: Repository<Question>,
-    @InjectRepository(Options) private optionsRepository: Repository<Options>) {
+    @InjectRepository(Options) private optionsRepository: Repository<Options>,
+    @InjectRepository(Answer) private answerRepository: Repository<Answer>) {
     
   }
   
@@ -53,10 +54,9 @@ export class QuestionService {
           await this.optionsRepository.delete(option.id);
         }
         for (const answer of question.answers) {
-          await this.optionsRepository.delete(answer.id);
+          await this.answerRepository.delete(answer.id);
         }
-        Object.assign(question, {questionText: text, kind, answerVariant: variant, options: [], answers: []});
-        await this.questionRepository.save(question);
+        await this.questionRepository.update({id: question.id}, {questionText: text, kind, answerVariant: variant});
       } else {
         Object.assign(question, {questionText: text, kind, answerVariant: variant, options, answers});
         await this.questionRepository.save(question);
