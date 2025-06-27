@@ -1,15 +1,12 @@
 ## Project setup
 
-To setup a project, you need to install all dependencies by running `npm install` and 
-then compile and run it in watch mode by `npm run start:dev`
+To setup a project, you need to install all dependencies by running `npm install`
 
-```bash
-$ npm install
-```
+## Database connection and server setup
 
-## Compile and run the project
+To setup server and create database connection, you need to create .env file. 
+You can see example in .env.example one.
 
-```bash
-# watch mode
-$ npm run start:dev
-```
+## Running project
+
+Then run project by `npm run start:dev`
