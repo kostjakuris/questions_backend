@@ -48,10 +48,20 @@ export class QuestionService {
     answers: Answer[]) {
     const question = await this.questionRepository.findOne({where: {id}});
     if (question) {
-      Object.assign(question, {questionText: text, kind, answerVariant: variant, options, answers});
-      await this.questionRepository.save(question);
+      if (kind === 'single' || kind === 'multiple' && variant === 'boolean') {
+        for (const option of question.options) {
+          await this.optionsRepository.delete(option.id);
+        }
+        for (const answer of question.answers) {
+          await this.optionsRepository.delete(answer.id);
+        }
+        Object.assign(question, {questionText: text, kind, answerVariant: variant, options: [], answers: []});
+        await this.questionRepository.save(question);
+      } else {
+        Object.assign(question, {questionText: text, kind, answerVariant: variant, options, answers});
+        await this.questionRepository.save(question);
+      }
     }
-    
   }
   
   async deleteQuestion(id: number) {
